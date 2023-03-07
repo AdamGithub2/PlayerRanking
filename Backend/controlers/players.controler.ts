@@ -17,9 +17,17 @@ export const randomInputScore = async () => {
   updateById(foundUsers._id)
 }
 
-export async function getPlayers(itemsPerPage: number): Promise<any> {
+const calculateSkip = (page: number, itemsPerPage: number) => {
+  return itemsPerPage * (page - 1)
+}
+
+export async function getPlayers(
+  page: number,
+  itemsPerPage: number,
+): Promise<any> {
   const foundUsers = await Player.find({})
     .limit(itemsPerPage)
+    .skip(calculateSkip(page, itemsPerPage))
     .then((result: any) => {
       return result
     })
