@@ -35,8 +35,8 @@ export default class Scores extends React.Component<Props, State> {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log("data", data);
-        this.setState({ data });
+        console.log("data", data.data);
+        this.setState({ data: data.data });
       });
   };
 
