@@ -1,7 +1,8 @@
 import React from "react";
+import { Player } from "../models/player.model";
 
 interface State {
-  data: any;
+  data: Player[] | null;
   page: number;
 }
 
@@ -32,6 +33,7 @@ export default class Scores extends React.Component<Props, State> {
       .then((response) => response.json())
       .then((data) => {
         console.log("data", data);
+        this.setState({ data });
       });
   };
 
@@ -40,6 +42,23 @@ export default class Scores extends React.Component<Props, State> {
   }
 
   render() {
-    return <div>Scores</div>;
+    const { data } = this.state;
+    return (
+      <>
+        <div>Scores</div>
+        <div>
+          {data?.map((item: Player) => {
+            return (
+              <h5 key={item.nick}>
+                {item.nick} {"  "}
+                {item.color}
+                {"  "}
+                {item.score}
+              </h5>
+            );
+          })}
+        </div>
+      </>
+    );
   }
 }
