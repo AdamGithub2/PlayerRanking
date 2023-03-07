@@ -26,6 +26,7 @@ export async function getPlayers(
   itemsPerPage: number,
 ): Promise<any> {
   const foundUsers = await Player.find({})
+    .sort({ score: -1 })
     .limit(itemsPerPage)
     .skip(calculateSkip(page, itemsPerPage))
     .then((result: any) => {
@@ -33,7 +34,9 @@ export async function getPlayers(
     })
     .catch((err: any) => {})
 
-  return foundUsers
+  const usersCount = await Player.find({}).count()
+
+  return { data: foundUsers, lenght: usersCount }
 }
 
 const getRandomPlayer = (): typeof PlayerSchema => {
