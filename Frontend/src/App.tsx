@@ -51,7 +51,7 @@ function App() {
           </div>
         </div>
 
-        <Scores numberPerPage={10} refreshing={refreshing} />
+        <Scores numberPerPage={10} refreshing={refreshing} nick={name} />
       </header>
     </div>
   );

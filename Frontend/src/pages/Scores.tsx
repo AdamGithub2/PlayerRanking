@@ -12,6 +12,7 @@ interface State {
 interface Props {
   numberPerPage: number;
   refreshing: number;
+  nick: string;
 }
 
 export default class Scores extends React.Component<Props, State> {
@@ -31,7 +32,9 @@ export default class Scores extends React.Component<Props, State> {
         "?page=" +
         this.state.page +
         "&numberPerPage=" +
-        this.props.numberPerPage,
+        this.props.numberPerPage +
+        "&nick=" +
+        this.props.nick,
       {
         method: "GET",
       }
@@ -62,6 +65,9 @@ export default class Scores extends React.Component<Props, State> {
           }, this.props.refreshing * 1000),
         });
       }
+    }
+    if (prevProps.nick !== this.props.nick) {
+      this.fetchData();
     }
   }
 
