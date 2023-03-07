@@ -24,17 +24,22 @@ const calculateSkip = (page: number, itemsPerPage: number) => {
 export async function getPlayers(
   page: number,
   itemsPerPage: number,
+  nickName?: string,
 ): Promise<any> {
-  const foundUsers = await Player.find({})
+  const foundUsers = await Player.find(
+    nickName ? { nick: { $regex: `/${nickName}/` } } : {},
+  )
     .sort({ score: -1 })
     .limit(itemsPerPage)
     .skip(calculateSkip(page, itemsPerPage))
+
     .then((result: any) => {
       return result
     })
     .catch((err: any) => {})
 
   const usersCount = await Player.find({}).count()
+  console.log('foundUsers', foundUsers, nickName ? { nick: `/Dr/` } : {})
 
   return { data: foundUsers, lenght: usersCount }
 }
