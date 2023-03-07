@@ -49,7 +49,7 @@ export default class Scores extends React.Component<Props, State> {
         <div>
           {data?.map((item: Player) => {
             return (
-              <h5>
+              <h5 key={item.nick}>
                 {item.nick} {"  "}
                 {item.color}
                 {"  "}
