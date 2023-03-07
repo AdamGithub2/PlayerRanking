@@ -7,10 +7,13 @@ import {
   randomInputScore,
 } from '../controlers/players.controler'
 const cron = require('node-cron')
+var cors = require('cors')
 
 const app: Application = express()
 
 const port: number = 3001
+
+app.use(cors())
 
 cron.schedule('*/10 * * * * *', () => {
   randomInputScore()
@@ -22,7 +25,9 @@ app.get('/add', (req: Request, res: Response) => {
 })
 
 app.get('/list', async (req: Request, res: Response) => {
-  const foundUsers = await getPlayers(2)
+  const page = req.query.page
+  const perPage = req.query.numberPerPage
+  const foundUsers = await getPlayers(Number(page), Number(perPage))
   res.send(foundUsers)
 })
 
