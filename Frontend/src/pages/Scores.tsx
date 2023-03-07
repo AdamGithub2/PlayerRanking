@@ -5,11 +5,13 @@ import { Player } from "../models/player.model";
 interface State {
   data: Player[] | null;
   page: number;
-  activePage: number;
+  totalItems: number;
+  interval: any;
 }
 
 interface Props {
   numberPerPage: number;
+  refreshing: number;
 }
 
 export default class Scores extends React.Component<Props, State> {
@@ -18,7 +20,8 @@ export default class Scores extends React.Component<Props, State> {
     this.state = {
       data: null,
       page: 1,
-      activePage: 1,
+      totalItems: 1,
+      interval: null,
     };
   }
 
@@ -36,14 +39,30 @@ export default class Scores extends React.Component<Props, State> {
       .then((response) => response.json())
       .then((data) => {
         console.log("data", data.data);
-        this.setState({ data: data.data });
+        this.setState({
+          data: data.data,
+          totalItems: data.lenght,
+        });
       });
   };
 
   componentDidMount(): void {
-    setInterval(() => {
-      this.fetchData();
-    }, 5000);
+    this.fetchData();
+    console.log("component did mount");
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>): void {
+    if (prevProps.refreshing !== this.props.refreshing) {
+      console.log("componentDidUpdate");
+      clearInterval(this.state.interval);
+      if (this.props.refreshing > 0) {
+        this.setState({
+          interval: setInterval(() => {
+            this.fetchData();
+          }, this.props.refreshing * 1000),
+        });
+      }
+    }
   }
 
   paginationItem = () => {
@@ -56,7 +75,10 @@ export default class Scores extends React.Component<Props, State> {
 
   pagination = () => {
     let pages = [];
-    for (let i = 1; i < 4; i++) {
+    const pagesCount = Math.ceil(
+      this.state.totalItems / this.props.numberPerPage
+    );
+    for (let i = 1; i <= pagesCount; i++) {
       pages.push(
         <button
           onClick={() => this.handleOnClick(i)}
