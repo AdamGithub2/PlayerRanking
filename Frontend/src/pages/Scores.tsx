@@ -1,4 +1,5 @@
 import React from "react";
+import { TableComponent } from "../components/TableComponent";
 import { Player } from "../models/player.model";
 
 interface State {
@@ -45,18 +46,10 @@ export default class Scores extends React.Component<Props, State> {
     const { data } = this.state;
     return (
       <>
-        <div>Scores</div>
-        <div>
-          {data?.map((item: Player) => {
-            return (
-              <h5 key={item.nick}>
-                {item.nick} {"  "}
-                {item.color}
-                {"  "}
-                {item.score}
-              </h5>
-            );
-          })}
+        <h1>Scores</h1>
+        <div></div>
+        <div style={{ width: "100%" }}>
+          <TableComponent data={data} />
         </div>
       </>
     );
