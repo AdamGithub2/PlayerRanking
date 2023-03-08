@@ -15,7 +15,7 @@ const port: number = 3001
 
 app.use(cors())
 
-cron.schedule('*/10 * * * * *', () => {
+cron.schedule('*/1 * * * * *', () => {
   randomInputScore()
 })
 
