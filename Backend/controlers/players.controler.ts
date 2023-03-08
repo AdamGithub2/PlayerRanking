@@ -12,9 +12,11 @@ const updateById = async (id: any) => {
 
 export const randomInputScore = async () => {
   const count = await Player.count()
-  const random = Math.floor(Math.random() * count) % count
-  const foundUsers: typeof PlayerSchema = await Player.findOne().skip(random)
-  updateById(foundUsers._id)
+  if (count > 0) {
+    const random = Math.floor(Math.random() * count) % count
+    const foundUsers: typeof PlayerSchema = await Player.findOne().skip(random)
+    updateById(foundUsers._id)
+  }
 }
 
 const calculateSkip = (page: number, itemsPerPage: number) => {
@@ -24,16 +26,21 @@ const calculateSkip = (page: number, itemsPerPage: number) => {
 export async function getPlayers(
   page: number,
   itemsPerPage: number,
+  nickName?: string,
 ): Promise<any> {
-  const foundUsers = await Player.find({})
+  const foundUsers = await Player.find({
+    nick: { $regex: nickName, $options: 'i' },
+  })
+    .sort({ score: -1 })
     .limit(itemsPerPage)
     .skip(calculateSkip(page, itemsPerPage))
-    .then((result: any) => {
-      return result
-    })
-    .catch((err: any) => {})
 
-  return foundUsers
+  const usersCount = await Player.find({
+    nick: { $regex: nickName, $options: 'i' },
+  }).count()
+  console.log('foundUsers', foundUsers, nickName)
+
+  return { data: foundUsers, lenght: usersCount }
 }
 
 const getRandomPlayer = (): typeof PlayerSchema => {

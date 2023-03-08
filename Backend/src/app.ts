@@ -15,7 +15,7 @@ const port: number = 3001
 
 app.use(cors())
 
-cron.schedule('*/10 * * * * *', () => {
+cron.schedule('*/1 * * * * *', () => {
   randomInputScore()
 })
 
@@ -27,7 +27,13 @@ app.get('/add', (req: Request, res: Response) => {
 app.get('/list', async (req: Request, res: Response) => {
   const page = req.query.page
   const perPage = req.query.numberPerPage
-  const foundUsers = await getPlayers(Number(page), Number(perPage))
+  const nick = req.query.nick
+  console.log(nick)
+  const foundUsers = await getPlayers(
+    Number(page),
+    Number(perPage),
+    nick?.toString(),
+  )
   res.send(foundUsers)
 })
 
